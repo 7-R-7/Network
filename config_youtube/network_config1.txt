@@ -1,0 +1,75 @@
+1/ configuration switch 1/2 :
+---------------------------
+Switch>enable
+Switch#config terminal
+Switch(config)#hostname SW1
+SW1(config)#line console 0
+SW1(config-line)#password cisco@123*-
+SW1(config-line)#login
+SW1(config-line)#exit
+SW1(config)#line vty 0 4
+SW1(config-line)#password cisco@123*-
+SW1(config-line)#login
+SW1(config-line)#exit
+SW1(config)#banner motd *WELCOME ADMIN*
+SW1(config)#service password-encryption
+SW1(config)#exit
+
+
+WELCOME ADMIN
+
+User Access Verification
+
+Password:  
+
+SW1>enable
+SW1#config terminal
+SW1(config)#enable secret cseven99*-123@
+SW1(config)#exit
+
+
+WELCOME ADMIN
+
+User Access Verification
+
+Password: 
+
+SW1>
+SW1>enable
+Password: 
+SW1#
+SW1#config terminal
+
+SW1(config)#exit
+SW1#
+SW1#copy running-config startup-config
+Destination filename [startup-config]? 
+Building configuration...
+[OK]
+SW1#
+SW1#exit
+
+
+2/ router configuration :
+-------------------------
+  --- System Configuration Dialog ---
+
+Would you like to enter the initial configuration dialog? [yes/no]: no
+
+
+Router>
+Router>enable
+Router#config terminal
+Router(config)#hostname R1
+R1(config)#int g0/1
+R1(config-if)#ip address 172.16.1.1 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#
+R1(config-if)#exit
+R1(config)#
+R1(config)#int g0/0
+	
+R1(config-if)#ip address 192.168.5.1 255.255.255.0
+R1(config-if)#no shutdown
+
+R1(config-if)#
