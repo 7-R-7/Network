@@ -1,0 +1,222 @@
+Static Configuration :
+----------------------
+1/ DHCP :
+ipv4 address : 172.16.0.100
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.16.0.2
+DNS Server : 172.16.0.200
+Pool : 172.16.0.50 - 172.16.0.99 
+
+2/ DNS :
+ipv4 address : 172.16.0.200
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.16.0.2
+DNS Server : 172.16.0.200
+
+3/ PC6 :
+ipv4 address : 172.16.0.10
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.16.0.2
+DNS Server : 172.16.0.200
+
+
+
+
+-----------------------------
+*****************************
+-----------------------------
+
+
+
+
+SWITCH 1 ( 192.168.1.0/24 ) :
+-----------------------------
+
+Switch>
+Switch>enable
+Switch#config terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW1
+SW1(config)#line console 0 
+SW1(config-line)#password cseven
+SW1(config-line)#login
+SW1(config-line)#exit
+SW1(config)#line vty 0 4
+SW1(config-line)#password cseven
+SW1(config-line)#login
+SW1(config-line)#exit
+SW1(config)#service password-encryption 
+SW1(config)#enable secret cseven
+SW1(config)#
+
+SWITCH 2 ( 172.16.0.0/24 ) :
+-----------------------------
+Switch>enable
+Switch#config terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW2
+SW2(config)#line console 0
+SW2(config-line)#password cseven
+SW2(config-line)#login
+SW2(config-line)#exit
+SW2(config)#line vty 0 4
+SW2(config-line)#password cseven
+SW2(config-line)#login
+SW2(config-line)#exit
+SW2(config)#
+SW1(config)#service password-encryption 
+SW1(config)#enable secret cseven
+SW1(config)#
+
+SWITCH 3 ( 172.16.40.0/24 ) :
+-----------------------------
+
+Switch>enable
+Switch#config terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW3
+SW3(config)#line console 0
+SW3(config-line)#password cseven
+SW3(config-line)#login
+SW3(config-line)#exit
+SW3(config)#line vty 0 4
+SW3(config-line)#password cseven
+SW3(config-line)#login
+SW3(config-line)#exit
+SW3(config)#service password-ecry
+SW3(config)#service password-encryption
+SW3(config)#enable secret cseven
+SW3(config)#
+
+ROUTER 2 :
+----------
+
+Router>enable
+Router#config terminal
+Router(config)#hostname R2
+R2(config)#int g0/0
+R2(config-if)#ip address 172.16.0.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#enable secret cseven
+R2(config)#int s0/0/0
+R2(config-if)#ip address 10.45.0.2 255.255.255.0
+R2(config-if)#no shutdown
+R2(config-if)#
+R2(config-if)#exit
+R2(config)#line console 0
+R2(config-line)#password cseven
+R2(config-line)#login
+R2(config-line)#exit
+R2(config)#line vty 0 4
+R2(config-line)#password cseven
+R2(config-line)#login
+R2(config-line)#exit
+R2(config)#service password-encryption
+R2(config)#
+
+ROUTER 1 :
+----------
+Router>enable
+Router#config terminal
+Router(config)#hostname R1
+R1(config)#enable secret cseven
+R1(config)#int s0/0/0
+R1(config-if)#ip address 10.45.0.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#int g0/0
+R1(config-if)#ip address 172.16.40.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#int s0/1/1
+R1(config-if)#ip address 10.32.0.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#line console 0
+R1(config-line)#password cseven
+R1(config-line)#login
+R1(config-line)#exit
+R1(config)#line vty 0 4
+R1(config-line)#password cseven
+R1(config-line)#login
+R1(config-line)#exit
+R1(config)#service password-encryption
+R1(config)#
+
+ROUTER 3 :
+----------
+Router>enable
+Router#config terminal
+Router(config)#
+Router(config)#hostname R3
+R3(config)#enable secret cseven
+R3(config)#line console 0
+R3(config-line)#password cseven
+R3(config-line)#login
+R3(config-line)#exit
+R3(config)#line vty 0 4
+R3(config-line)#password cseven
+R3(config-line)#login
+R3(config-line)#exit
+R3(config)#service password-encryption
+R3(config)#int s0/0/1
+R3(config-if)#ip address 10.32.0.30 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#int g0/0
+R3(config-if)#ip address 10.31.0.30 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#int g0/1
+R3(config-if)#ip address 10.23.0.30 255.255.255.0
+R3(config-if)#no shutdown
+R3(config-if)#exit
+R3(config)#exit
+R3#
+
+ROUTER 4 :
+----------
+Router>enable
+Router#config terminal
+Router(config)#hostname R4
+R4(config)#enable secret cseven
+R4(config)#line console 0
+R4(config-line)#password cseven
+R4(config-line)#login
+R4(config-line)#exit
+R4(config)#line vty 0 4
+R4(config-line)#password cseven
+R4(config-line)#login
+R4(config-line)#exit
+R4(config)#service password-encryption
+R4(config)#int g0/0
+R4(config-if)#ip address 10.31.0.40 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#int g0/1
+R4(config-if)#ip address 192.168.1.40 255.255.255.0
+R4(config-if)#no shutdown
+R4(config-if)#exit
+R4(config)#
+
+ROUTER 5 :
+----------
+Router>enable
+Router#config terminal
+Router(config)#hostname R5
+R5(config)#enable secret cseven
+R5(config)#line console 0
+R5(config-line)#password cseven
+R5(config-line)#login
+R5(config-line)#exit
+R5(config)#line vty 0 4
+R5(config-line)#password cseven
+R5(config-line)#login
+R5(config-line)#exit
+R5(config)#service password-encryption
+R5(config)#int g0/1
+R5(config-if)#ip address 10.23.0.50 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)#int g0/0
+R5(config-if)#ip address 192.168.1.50 255.255.255.0
+R5(config-if)#no shutdown
+R5(config-if)#exit
+R5(config)#
