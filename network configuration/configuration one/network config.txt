@@ -19,6 +19,41 @@ Subnet Mask : 255.255.255.0
 Default Gateway : 172.16.0.2
 DNS Server : 172.16.0.200
 
+4/ PC2 :
+ipv4 address : 172.16.40.11
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.168.40.10
+DNS Server : 172.16.0.200
+
+5/ PC3 :
+ipv4 address : 172.16.40.12
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.168.40.10
+DNS Server : 172.16.0.200
+
+6/ PC4 :
+ipv4 address : 172.16.40.13
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.168.40.10
+DNS Server : 172.16.0.200
+
+7/ PC5 :
+ipv4 address : 172.16.40.14
+Subnet Mask : 255.255.255.0
+Default Gateway : 172.168.40.10
+DNS Server : 172.16.0.200
+
+8/ PC0 :
+ipv4 address : 192.168.1.20
+Subnet Mask : 255.255.255.0
+Default Gateway : 192.168.1.254
+DNS Server : 172.16.0.200
+
+9/ PC1 :
+ipv4 address : 192.168.1.10
+Subnet Mask : 255.255.255.0
+Default Gateway : 192.168.1.254
+DNS Server : 172.16.0.200
 
 
 
@@ -31,6 +66,7 @@ DNS Server : 172.16.0.200
 
 SWITCH 1 ( 192.168.1.0/24 ) :
 -----------------------------
+
 
 Switch>
 Switch>enable
@@ -48,6 +84,7 @@ SW1(config-line)#exit
 SW1(config)#service password-encryption 
 SW1(config)#enable secret cseven
 SW1(config)#
+
 
 SWITCH 2 ( 172.16.0.0/24 ) :
 -----------------------------
@@ -67,6 +104,22 @@ SW2(config)#
 SW1(config)#service password-encryption 
 SW1(config)#enable secret cseven
 SW1(config)#
+SW2(config)#ip dhcp snooping
+SW2(config)#ip dhcp snooping vlan 1
+SW2(config)#int f0/2
+SW2(config-if)#ip dhcp snooping trust
+SW2(config-if)#int range f0/1,f0/3-4
+SW2(config-if-range)#ip dhcp snooping limit rate 3
+SW2(config-if-range)#exit
+SW2(config)#ip arp inspection vlan 1
+SW2(config)#int f0/2
+SW2(config-if)#ip arp inspection trust
+SW2(config-if)#exit
+SW2(config)#int f0/1
+SW2(config-if)#ip arp inspection trust
+SW2(config-if)#exit
+SW2(config)#
+
 
 SWITCH 3 ( 172.16.40.0/24 ) :
 -----------------------------
@@ -87,6 +140,46 @@ SW3(config)#service password-ecry
 SW3(config)#service password-encryption
 SW3(config)#enable secret cseven
 SW3(config)#
+SW3(config)#int f0/1
+SW3(config-if)#switchport mode access
+SW3(config-if)#switchport port-security
+SW3(config-if)#switchport port-security violation restrict 
+SW3(config-if)#switchport port-security maximum 2
+SW3(config)#int f0/2
+SW3(config-if)#switchport mode access
+SW3(config-if)#switchport port-security
+SW3(config-if)#switchport port-security violation shutdown
+SW3(config-if)#switchport port-security maximum 2
+SW3(config-if)#exit
+SW3(config)#
+
+
+ROUTER 1 :
+----------
+Router>enable
+Router#config terminal
+Router(config)#hostname R1
+R1(config)#enable secret cseven
+R1(config)#int s0/0/0
+R1(config-if)#ip address 10.45.0.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#int g0/0
+R1(config-if)#ip address 172.16.40.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#int s0/1/1
+R1(config-if)#ip address 10.32.0.10 255.255.255.0
+R1(config-if)#no shutdown
+R1(config-if)#line console 0
+R1(config-line)#password cseven
+R1(config-line)#login
+R1(config-line)#exit
+R1(config)#line vty 0 4
+R1(config-line)#password cseven
+R1(config-line)#login
+R1(config-line)#exit
+R1(config)#service password-encryption
+R1(config)#
+
 
 ROUTER 2 :
 ----------
@@ -114,31 +207,6 @@ R2(config-line)#exit
 R2(config)#service password-encryption
 R2(config)#
 
-ROUTER 1 :
-----------
-Router>enable
-Router#config terminal
-Router(config)#hostname R1
-R1(config)#enable secret cseven
-R1(config)#int s0/0/0
-R1(config-if)#ip address 10.45.0.10 255.255.255.0
-R1(config-if)#no shutdown
-R1(config-if)#int g0/0
-R1(config-if)#ip address 172.16.40.10 255.255.255.0
-R1(config-if)#no shutdown
-R1(config-if)#int s0/1/1
-R1(config-if)#ip address 10.32.0.10 255.255.255.0
-R1(config-if)#no shutdown
-R1(config-if)#line console 0
-R1(config-line)#password cseven
-R1(config-line)#login
-R1(config-line)#exit
-R1(config)#line vty 0 4
-R1(config-line)#password cseven
-R1(config-line)#login
-R1(config-line)#exit
-R1(config)#service password-encryption
-R1(config)#
 
 ROUTER 3 :
 ----------
@@ -171,6 +239,7 @@ R3(config-if)#exit
 R3(config)#exit
 R3#
 
+
 ROUTER 4 :
 ----------
 Router>enable
@@ -195,6 +264,15 @@ R4(config-if)#ip address 192.168.1.40 255.255.255.0
 R4(config-if)#no shutdown
 R4(config-if)#exit
 R4(config)#
+R4(config)#int g0/1
+R4(config-if)#standby 1 ip 192.168.1.254
+R4(config-if)#int g0/1
+R4(config-if)#standby 1 ip 192.168.1.254
+R4(config-if)#no shutdown
+R4(config-if)#standby 1 priority 150
+R4(config-if)#standby 1  preempt
+R4(config-if)#exit
+
 
 ROUTER 5 :
 ----------
