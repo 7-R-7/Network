@@ -1,0 +1,76 @@
+Switch 1 :
+----------
+
+Switch>
+Switch>enable
+Switch#config terminal
+Switch(config)#
+Switch(config)#enable secret cisco
+Switch(config)#line console 0	
+Switch(config-line)#password cisco
+Switch(config-line)#login
+Switch(config-line)#exit
+Switch(config)#line vty 0 4
+Switch(config-line)#password cisco
+Switch(config-line)#login
+Switch(config-line)#exit
+Switch(config)#hostname SW1
+SW1(config)#banner motd 'Etherchannel config'
+SW1(config)#
+SW1(config)#service password-ecnryption
+SW1(config)#
+SW1(config)#int f0/1
+SW1(config-if)#channel-group 1 mode desirable
+SW1(config-if)#exit
+SW1(config)#
+SW1(config)#int f0/2
+SW1(config-if)#channel-group 1 mode desirable
+SW1(config-if)#exit
+SW1(config)#
+SW1(config)#int f0/3
+SW1(config-if)#channel-group 1 mode desirable
+SW1(config-if)#exit
+SW1(config)#
+SW1(config)#int f0/4
+SW1(config-if)#channel-group 1 mode desirable
+SW1(config-if)#exit
+SW1(config)#
+
+Switch 2 :
+----------
+
+Switch 1 :
+----------
+
+Switch>
+Switch>enable
+Switch#config terminal
+Switch(config)#
+Switch(config)#enable secret cisco
+Switch(config)#line console 0	
+Switch(config-line)#password cisco
+Switch(config-line)#login
+Switch(config-line)#exit
+Switch(config)#line vty 0 4
+Switch(config-line)#password cisco
+Switch(config-line)#login
+Switch(config-line)#exit
+Switch(config)#hostname SW2
+SW2(config)#banner motd 'Etherchannel config'
+SW2(config)#
+SW2(config)#int f0/1
+SW2(config-if)#channel-group 1 mode desirable
+SW2(config-if)#exit
+SW2(config)#
+SW2(config)#int f0/2
+SW2(config-if)#channel-group 1 mode desirable
+SW2(config-if)#exit
+SW2(config)#
+SW2(config)#int f0/3
+SW2(config-if)#channel-group 1 mode desirable
+SW2(config-if)#exit
+SW2(config)#
+SW2(config)#int f0/4
+SW2(config-if)#channel-group 1 mode desirable
+SW2(config-if)#exit
+SW2(config)#
